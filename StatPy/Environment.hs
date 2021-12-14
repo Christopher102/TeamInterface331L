@@ -11,8 +11,8 @@
  -}
 module StatPy.Environment (Env (..)) where
 
-import HOPL.CHECKED.DataStructures (Binding, DenVal, Environment (..), ExpVal (ProcVal), Procedure (..))
-import HOPL.Types (Id)
+import StatPy.DataStructures (Binding, DenVal, Environment (..), ExpVal (ProcVal), Procedure (..))
+import StatPy.Types (Id)
 
 {- Interface for an environment (symbol-to-value mapping) -}
 

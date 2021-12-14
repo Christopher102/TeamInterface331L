@@ -14,9 +14,9 @@ module StatPy.Lang.Parser
   )
 where
 
-import HOPL.CHECKED.Type
-import HOPL.CHECKED.Lang.Lexer
-import HOPL.CHECKED.Lang.Syntax (Exp (..), Pgm (..))
+import StatPy.Type
+import StatPy.Lang.Lexer
+import StatPy.Lang.Syntax (Exp (..), Pgm (..))
 import Text.Parsec (ParseError, choice, eof, many1, parse, sepBy, try)
 import qualified Text.Parsec.Expr as Ex
 import Text.Parsec.String (Parser)
@@ -47,9 +47,8 @@ expression =
   (choice . map try)
     [ -- Variable declarations
       LetExp
-        <$> (reserved "let" >> identifier)
-        <*> (reserved "=" >> expression)
-        <*> (reserved "in" >> expression),
+        <$> (identifier)
+        <*> (reserved "=" >> expression),
       LetrecExp
         <$> (reserved "letrec" >> typeAnnotation)
         <*> identifier
@@ -60,11 +59,10 @@ expression =
       -- Control expressions
       IfExp
         <$> (reserved "if" >> expression)
-        <*> (reserved "then" >> expression)
         <*> (reserved "else" >> expression),
       -- Function definition
-      ProcExp
-        <$> (reserved "proc" >> symbol "(" >> identifier)
+      DefExp
+        <$> (reserved "def" >> symbol "(" >> identifier)
         <*> (symbol ":" >> typeAnnotation)
         <*> (symbol ")" >> expression),
       -- Function call
@@ -76,8 +74,50 @@ expression =
         <$> (reservedOp "-" >> symbol "(" >> expression)
         <*> (symbol "," >> expression <* symbol ")"),
       -- Arithmetic/numeric predicates
+      AddExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp "+" >> expression <* symbol ")"),
+      --Mult Exp
+      MultExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp "*" >> expression <* symbol ")"),
+      DivExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp "/" >> expression <* symbol ")"),
+      ExpoExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp "**" >> expression <* symbol ")"),
+      ModExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp "%" >> expression <* symbol ")"),
+      SqrtExp
+        <$> (reserved "sqrt" >> parens expression),
+      GreaterExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp ">" >> expression <* symbol ")"),
+      LessExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp "<" >> expression <* symbol ")"),
+      GreatEqExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp ">=" >> expression <* symbol ")"), 
+      LessEqExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp "<=" >> expression <* symbol ")"),  
+      EqualExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp "==" >> expression <* symbol ")"),
+      NotEqualExp
+        <$> (symbol "(" >> expression)
+        <*> (reservedOp "!=" >> expression <* symbol ")"),
+      NotExp
+        <$> (reserved "not" >> parens expression),       
       IsZeroExp
         <$> (reserved "zero?" >> parens expression),
+      EmptyExp
+        <$ reserved "emptylist",
+      List
+        <$> (reserved "list" >> symbol "[" >> (sepBy expression (symbol ",") >> "]"),
       -- Integer literal
       ConstExp
         <$> integer,
@@ -93,7 +133,10 @@ typeAnnotation =
         <$ reserved "int",
       BoolType
         <$ reserved "bool",
-      ProcType
+      ListType 
+        <$ reserved "list",
+        
+      DefType
         <$> (symbol "(" >> typeAnnotation)
         <*> (reservedOp "->" >> typeAnnotation <* symbol ")")
     ]

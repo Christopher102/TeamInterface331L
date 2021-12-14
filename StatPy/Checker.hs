@@ -10,12 +10,12 @@
  -}
 module StatPy.Checker (check, checkWith) where
 
-import HOPL.CHECKED.DataStructures (DenVal, Environment, ExpVal (..), Procedure (..))
-import HOPL.CHECKED.Environment (Env (..))
-import HOPL.CHECKED.Lang.Parser (ParseError, parseToplevel)
-import HOPL.CHECKED.Lang.Syntax (Exp (..), Pgm (..))
-import HOPL.CHECKED.TypeEnv
-import HOPL.Types (Source)
+import StatPy.DataStructures (DenVal, Environment, ExpVal (..), Procedure (..))
+import StatPy.Environment (Env (..))
+import StatPy.Lang.Parser (ParseError, parseToplevel)
+import StatPy.Lang.Syntax (Exp (..), Pgm (..))
+import StatPy.TypeEnv
+import StatPy.Types (Source)
 
 check :: Source -> Either ParseError Pgm
 check src = checkWith emptyTenv src
@@ -43,11 +43,17 @@ typeOfProgram (Pgm e) ρ = typeOf e ρ
 typeOf :: Exp -> TypeEnvironment -> Type
 typeOf (ConstExp _) _ = IntType
 typeOf (VarExp x) ρ = applyTenv ρ x
+
+
+
+
 typeOf (IsZeroExp exp) ρ
   | t == IntType = BoolType
   | otherwise = reportUnequalTypes IntType t exp
   where
     t = typeOf exp ρ
+
+--Diff Exp
 typeOf (DiffExp exp₁ exp₂) ρ
   | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
   | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
@@ -55,6 +61,113 @@ typeOf (DiffExp exp₁ exp₂) ρ
   where
     t₁ = typeOf exp₁ ρ
     t₂ = typeOf exp₂ ρ
+
+
+-- Add Exp
+typeOf (AddExp exp₁ exp₂) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+    t₂ = typeOf exp₂ ρ
+
+-- Mult Exp 
+typeOf (MultExp exp₁ exp₂) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+    t₂ = typeOf exp₂ ρ
+
+--Div Exp
+typeOf (DivExp exp₁ exp₂) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+    t₂ = typeOf exp₂ ρ
+
+-- ExpoExp
+typeOf (ExpoExp exp₁ exp₂) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+    t₂ = typeOf exp₂ ρ
+
+-- ModExp
+typeOf (ModExp exp₁ exp₂) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+    t₂ = typeOf exp₂ ρ
+
+--Sqrt Exp
+typeOf (SqrtExp exp₁ ) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+  
+
+-- GreaterExp
+typeOf (GreaterExp exp₁ exp₂) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+    t₂ = typeOf exp₂ ρ
+
+--Less Exp 
+typeOf (LessExp exp₁ exp₂) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+    t₂ = typeOf exp₂ ρ
+
+--GreatEqExp
+typeOf (GreatEqExp exp₁ exp₂) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+    t₂ = typeOf exp₂ ρ
+
+--LessEqExp
+typeOf (LessEqExp exp₁ exp₂) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+    t₂ = typeOf exp₂ ρ
+
+--EqualExp
+typeOf (EqualExp exp₁ exp₂) ρ
+  | t₁ /= IntType = reportUnequalTypes IntType t₁ exp₁
+  | t₂ /= IntType = reportUnequalTypes IntType t₂ exp₂
+  | otherwise = IntType
+  where
+    t₁ = typeOf exp₁ ρ
+    t₂ = typeOf exp₂ ρ
+
+--NotExp
+typeOf (NotExp exp₁) ρ
+  | t₁ /= BoolType = reportUnequalTypes BoolType t₁ exp₁
+  | otherwise = BoolType
+  where
+    t₁ = typeOf exp₁ ρ
+
 typeOf (IfExp exp₁ exp₂ exp₃) ρ
   | t₁ /= BoolType = reportUnequalTypes BoolType t₁ exp₁
   | t₂ /= t₃ = reportUnequalTypes t₂ t₃ exp₂
@@ -63,16 +176,19 @@ typeOf (IfExp exp₁ exp₂ exp₃) ρ
     t₁ = typeOf exp₁ ρ
     t₂ = typeOf exp₂ ρ
     t₃ = typeOf exp₃ ρ
+
 typeOf (LetExp var rhs body) ρ = typeOf body ρ'
   where
     ρ' = extendTenv var t ρ
     t = typeOf rhs ρ
+
 typeOf (LetrecExp tres pname param targ pbody body) ρ
   | tres' == tres = typeOf body ρ'
   | otherwise = reportUnequalTypes tres tres' pbody
   where
     ρ' = extendTenv pname (ProcType targ tres) ρ
     tres' = typeOf pbody (extendTenv param targ ρ')
+
 typeOf (ProcExp param targ body) ρ = ProcType targ tres
   where
     tres = typeOf body ρ'

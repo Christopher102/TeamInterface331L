@@ -10,8 +10,8 @@
  -}
 module StatPy.Lang.Syntax where
 
-import HOPL.CHECKED.Type (Type)
-import HOPL.Types (Id)
+import StatPy.Type (Type)
+import StatPy.Types (Id)
 
 newtype Pgm
   = Pgm Exp
@@ -28,13 +28,44 @@ data Exp
     IsZeroExp Exp
   | -- Arithmetic operators
     DiffExp Exp Exp
+  | 
+    AddExp Exp Exp
+  |
+    MultExp Exp Exp
+  |
+    DivExp Exp Exp
+  |
+    SqrtExp Exp
+  |
+    ExpoExp Exp Exp
+  |
+    ModExp Exp Exp
+  |
+    GreaterExp Exp Exp
+  |
+    LessExp Exp Exp
+  |
+    GreatEqExp Exp Exp
+  |
+    LessEqExp Exp Exp
+  |
+    EqualExp Exp Exp
+  |
+    NotEqualExp Exp Exp
+  |
+    NotExp Exp
   | -- Variable declarations
-    LetExp Id Exp Exp
-  | LetrecExp Type Id Id Type Exp Exp
+    LetExp Id Exp
+  | 
+    LetrecExp Type Id Id Type Exp Exp
   | -- Control expressions
-    IfExp Exp Exp Exp
+    IfExp Exp Exp 
+  | -- For Lists
+    EmptyExp
+  |
+    List [Exp]
   | -- Function definition
-    ProcExp Id Type Exp
+    FuncExp Id Type Exp
   | -- Function call
     CallExp Exp Exp
   deriving (Eq, Ord, Show)

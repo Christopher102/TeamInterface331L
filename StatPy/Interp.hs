@@ -17,13 +17,13 @@ module StatPy.Interp
 where
 
 import Data.Either (fromRight)
-import HOPL.CHECKED.Checker
-import HOPL.CHECKED.DataStructures (DenVal, Environment, ExpVal (..), Procedure (..))
-import HOPL.CHECKED.Environment (Env (..))
-import HOPL.CHECKED.Lang.Parser (ParseError, parseToplevel)
-import HOPL.CHECKED.Lang.Syntax (Exp (..), Pgm (..))
-import HOPL.CHECKED.TypeEnv (TEnv (..), TypeEnvironment)
-import HOPL.Types (Source)
+import StatPy.Checker
+import StatPy.DataStructures (DenVal, Environment, ExpVal (..), Procedure (..))
+import StatPy.Environment (Env (..))
+import StatPy.Lang.Parser (ParseError, parseToplevel)
+import StatPy.Lang.Syntax (Exp (..), Pgm (..))
+import StatPy.TypeEnv (TEnv (..), TypeEnvironment)
+import StatPy.Types (Source)
 import Prelude hiding (exp)
 
 {- top-level interpreter routines -}
@@ -64,6 +64,78 @@ valueOf (DiffExp exp₁ exp₂) ρ = NumVal (n₁ - n₂)
   where
     NumVal n₁ = valueOf exp₁ ρ
     NumVal n₂ = valueOf exp₂ ρ
+-- Add Exp
+valueOf (AddExp exp₁ exp₂) ρ = NumVal (n₁ + n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+-- Mult Exp
+valueOf (MultExp exp₁ exp₂) ρ = NumVal (n₁ * n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+-- Div Exp
+valueOf (DivExp exp₁ exp₂) ρ = NumVal (n₁ `div` n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+-- Expo Exp
+valueOf (ExpoExp exp₁ exp₂) ρ = NumVal (n₁ ^^ n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+
+-- ModExp
+valueOf (ModExp exp₁ exp₂) ρ = NumVal (n₁ `mod` n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+
+-- Greater Exp
+valueOf (GreaterExp exp₁ exp₂) ρ = BoolVal (n₁ > n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+
+--Less Exp
+valueOf (LessExp exp₁ exp₂) ρ = BoolVal (n₁ < n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+
+--GreaterEqExp
+valueOf (LessExp exp₁ exp₂) ρ = BoolVal (n₁ >= n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+
+--LessEqExp
+valueOf (LessExp exp₁ exp₂) ρ = BoolVal (n₁ <= n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+
+--EqualExp
+valueOf (EqualExp exp₁ exp₂) ρ = BoolVal (n₁ == n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+
+--NotEqualExp
+valueOf (EqualExp exp₁ exp₂) ρ = BoolVal (n₁ != n₂)
+  where
+    NumVal n₁ = valueOf exp₁ ρ
+    NumVal n₂ = valueOf exp₂ ρ
+
+--NotExp
+valueOf (NotExp exp₁) ρ = BoolVal (! n₁)
+  where
+    BoolVal n₁ = valueOf exp₁ ρ
+
+--Sqrt Exp 
+valueOf (SqrtExp exp₁) ρ = NumVal (sqrt n)
+  where
+    NumVal n = valueOf exp₁ ρ
 -- Variable declarations
 valueOf (LetExp var rhs body) ρ = valueOf body ρ'
   where

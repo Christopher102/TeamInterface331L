@@ -18,8 +18,8 @@ module StatPy.DataStructures
   )
 where
 
-import HOPL.CHECKED.Lang.Syntax (Exp)
-import HOPL.Types (Id)
+import StatPy.Lang.Syntax (Exp)
+import StatPy.Types (Id)
 
 -- Denoted values are any expressed value
 type DenVal = ExpVal
@@ -28,15 +28,22 @@ type DenVal = ExpVal
 data ExpVal
   = NumVal {expvalToNum :: Integer}
   | BoolVal {expvalToBool :: Bool}
-  | ProcVal {expvalToProc :: Procedure}
+  | StringVal {expvalToString :: String}
+  | CharVal {expvalToChar :: Char}
+  | NullVal {expvalToNull :: Null}
+  | DefVal {expvalToDef :: Procedure}
   | ListVal {expvalToList :: [ExpVal]}
   deriving (Eq)
 
 instance Show ExpVal where
   show (NumVal n) = "(NumVal " ++ show n ++ ")"
   show (BoolVal z) = "(BoolVal " ++ show z ++ ")"
-  show (ProcVal f) = "(ProcVal " ++ show f ++ ")"
+  show (StringVal s) = "(StringVal " ++ show s ++ ")"
+  show (CharVal c) = "(CharVal " ++ show c ++ ")"
+  show (NullVal n) = "(NullVal " ++ show n ++ ")"
+  show (DefVal d) = "(DefVal " ++ show d ++ ")"
   show (ListVal vs) = "(ListVal " ++ show vs ++ ")"
+  
 
 {- Recursive "data structure" representation for environments -}
 

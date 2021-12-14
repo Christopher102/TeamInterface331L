@@ -1,12 +1,11 @@
 {-
- -  HOPL/CHECKED/Lexer.hs
+ -  Lang/Lexer.hs
  -
- -  Reference implementation of the toy language CHECKED from the
- -  EOPL3 textbook by Mitchell Wand.
+ -  Implementation for Statpy Language
  -
- -  This module provides the lexical specification for CHECKED.
+ -  This module provides the lexical specification for StatPy
  -
- -  Author: Matthew A Johnson
+ -  Author: Brandon Alker, Nick Petrilli, and Christopher Fioti
  -}
 module StatPy.Lang.Lexer where
 
@@ -22,25 +21,48 @@ checkedLexer =
 
 checkedDef =
   emptyDef
-    { Tok.commentLine = "%",
+    { Tok.commentLine = "//",
+      Tok.commentStart = "/*",
+      Tok.commentEnd = "*/",
       Tok.identStart = letter,
       Tok.identLetter = alphaNum <|> oneOf "_-?",
       Tok.reservedOpNames =
         [ "=",
           "-",
-          "->"
+          "->",
+          "+", 
+          "-", 
+          "*", 
+          "/", 
+          "**", 
+          "%", 
+          "sqrt", 
+          ">", 
+          "<", 
+          ">", 
+          "<=", 
+          ">=", 
+          "==", 
+          "!=", 
+          "not" 
         ],
       Tok.reservedNames =
-        [ "let",
-          "in",
+        [ "integer",
+          "boolean",
+          "string",
+          "function",
+          "char",
+          "list",
+          "emptyList",
+          "null",
           "if",
-          "then",
           "else",
-          "zero?",
-          "proc",
-          "letrec",
-          "int",
-          "bool"
+          "for",
+          "while",
+          "isZero",
+          "head",
+          "tail",
+          "import"
         ]
     }
 

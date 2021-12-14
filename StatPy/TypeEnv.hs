@@ -13,9 +13,9 @@ module StatPy.TypeEnv (TEnv (..), TypeEnvironment, Type (..)) where
 
 import Data.List
 import Data.Maybe
-import HOPL.CHECKED.DataStructures
-import HOPL.CHECKED.Type
-import HOPL.Types (Id)
+import StatPy.DataStructures
+import StatPy.Type
+import StatPy.Types (Id)
 
 nobinding = error . ("No binding found for \"" ++) . (++ "\"")
 

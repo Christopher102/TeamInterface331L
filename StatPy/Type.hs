@@ -13,10 +13,20 @@ module StatPy.Type where
 data Type
   = IntType
   | BoolType
-  | ProcType Type Type
+  | StringType
+  | CharType
+  | NullType
+  | ListType
+  | DefType Type Type
   deriving (Eq, Ord)
 
 instance Show Type where
   show IntType = "int"
   show BoolType = "bool"
-  show (ProcType targ tres) = "(" ++ show targ ++ " -> " ++ show tres ++ ")"
+  show StringType = "string"
+  show CharType = "char"
+  show NullType = "null"
+  show ListType = "list"
+  show (DefType targ tres) = "(" ++ show targ ++ " -> " ++ show tres ++ ")"
+  
+  
